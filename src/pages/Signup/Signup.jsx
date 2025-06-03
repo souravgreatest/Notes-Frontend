@@ -36,7 +36,7 @@ const Signup = () => {
     // sign up api
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/signup",
+        "https://notes-backend-1-2umi.onrender.com/api/auth/signup",
         { username: name, email, password }
       )
 
