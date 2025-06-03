@@ -29,7 +29,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
     }
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/note/edit/" + noteId,
+        "https://notes-backend-1-2umi.onrender.com/api/note/edit/" + noteId,
         { title, content, tags, user_mail }
       );
 
@@ -64,7 +64,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
     }
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/note/add",
+        "https://notes-backend-1-2umi.onrender.com/api/note/add",
         { title, content, tags, user_mail }
       );
 

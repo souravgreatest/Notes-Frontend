@@ -43,7 +43,7 @@ const Home = () => {
       return; // Added return to prevent further execution
     }
     try {
-      const res = await axios.get("http://localhost:5000/api/note/all", {
+      const res = await axios.get("https://notes-backend-1-2umi.onrender.com/api/note/all", {
         headers: {
           "Content-Type": "application/json",
           Authorization: user_mail,
@@ -93,7 +93,7 @@ const Home = () => {
     const noteId = data._id;
     try {
       const res = await axios.delete(
-        "http://localhost:5000/api/note/delete/" + noteId
+        "https://notes-backend-1-2umi.onrender.com/api/note/delete/" + noteId
       );
 
       if (res.data.success === false) {
@@ -113,7 +113,7 @@ const Home = () => {
 
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/note/update-note-pinned/" + noteId,
+        "https://notes-backend-1-2umi.onrender.com/api/note/update-note-pinned/" + noteId,
         { isPinned: !noteData.isPinned }
       );
 
