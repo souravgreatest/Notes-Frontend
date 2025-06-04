@@ -12,10 +12,11 @@ import {
 } from "../redux/user/userSlice";
 import axios from "axios";
 import { useTheme } from "../pages/Home/ThemeContext"; // Import useTheme hook
-import { MdLightMode, MdDarkMode } from "react-icons/md"; // Import icons for theme toggle
+import { MdLightMode, MdDarkMode, MdMenu, MdClose } from "react-icons/md"; // Import icons for theme toggle and menu
 
 const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
   const { theme, toggleTheme } = useTheme(); // Use the theme context
 
   const navigate = useNavigate();
@@ -45,9 +46,12 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
     }
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    // Apply theme-based background and text colors
-    <div className="bg-white dark:bg-gray-800 flex items-center justify-between px-6 py-2 drop-shadow">
+    <div className="bg-white dark:bg-gray-800 flex items-center justify-between px-4 py-2 drop-shadow relative md:px-6">
       <Link to={"/"}>
         <h2 className="text-xl font-medium text-black dark:text-white py-2">
           <span className="text-slate-500">Good</span>
@@ -55,30 +59,73 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
         </h2>
       </Link>
 
-      <SearchBar
-        value={searchQuery}
-        onChange={({ target }) => setSearchQuery(target.value)}
-        handleSearch={handleSearch}
-        onClearSearch={onClearSearch}
-      />
+      {/* Hamburger menu icon for mobile */}
+      <div className="md:hidden flex items-center gap-2">
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors duration-200"
+          aria-label="Toggle theme"
+        >
+          {theme === "light" ? (
+            <MdDarkMode className="text-2xl" />
+          ) : (
+            <MdLightMode className="text-2xl" />
+          )}
+        </button>
+        <button
+          onClick={toggleMobileMenu}
+          className="text-slate-600 dark:text-white text-2xl focus:outline-none"
+          aria-label="Toggle mobile menu"
+        >
+          {isMobileMenuOpen ? <MdClose /> : <MdMenu />}
+        </button>
+      </div>
 
-      {/* Theme Toggle Button */}
-      <button
-        onClick={toggleTheme}
-        className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors duration-200"
-        aria-label="Toggle theme"
-      >
-        {theme === 'light' ? (
-          <MdDarkMode className="text-2xl" />
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center gap-4">
+        <SearchBar
+          value={searchQuery}
+          onChange={({ target }) => setSearchQuery(target.value)}
+          handleSearch={handleSearch}
+          onClearSearch={onClearSearch}
+        />
+
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors duration-200"
+          aria-label="Toggle theme"
+        >
+          {theme === "light" ? (
+            <MdDarkMode className="text-2xl" />
+          ) : (
+            <MdLightMode className="text-2xl" />
+          )}
+        </button>
+
+        {localStorage.getItem("user") ? (
+          <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
         ) : (
-          <MdLightMode className="text-2xl" />
+          ""
         )}
-      </button>
+      </div>
 
-      {localStorage.getItem("user") ? (
-        <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
-      ) : (
-        ""
+      {/* Mobile Menu (conditionally rendered) */}
+      {isMobileMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-4 md:hidden z-50">
+          <SearchBar
+            value={searchQuery}
+            onChange={({ target }) => setSearchQuery(target.value)}
+            handleSearch={handleSearch}
+            onClearSearch={onClearSearch}
+          />
+          {localStorage.getItem("user") ? (
+            <div className="mt-4">
+              <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       )}
     </div>
   );
